@@ -1,0 +1,15 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".*.test.ts$",
+  "collectCoverage": true,
+  "coverageReporters": ["json-summary", "text", "lcov"],
+  "coverageDirectory": "./coverage/",
+  "moduleNameMapper": {
+    "^~fixtures/(.*)$": "<rootDir>/test/fixtures/$1"
+  },
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  }
+}

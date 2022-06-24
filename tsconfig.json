@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "resolveJsonModule": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noUnusedLocals": true,
+    "sourceMap": true,
+    "strict": false,
+    "module": "commonjs",
+    "target": "ES2021",
+    "outDir": "dist",
+    "rootDir": "./src/",
+    "types": [
+      "node",
+      "jest"
+    ],
+    "typeRoots": [
+      "./node_modules/@types/",
+      "./typings/"
+    ],
+    "lib": [
+      "ES2021"
+    ],
+    "paths": {
+      "~fixtures/*": ["./test/fixtures/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "src/**/*.json"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
