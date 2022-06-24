@@ -1,5 +1,6 @@
 import { AbstractRequestClient } from '../abstract-request-client';
 import { resolver } from '../resolvers/consul-resolver';
+import { ClientOptions } from '../models/options';
 
 /**
  *
@@ -12,7 +13,7 @@ export class ConsulRequestClient extends AbstractRequestClient {
    * @param serviceName
    * @param options
    */
-  constructor(serviceName: string, options = {}) {
+  constructor(serviceName: string, options = {} as ClientOptions) {
     super(options);
     this.serviceName = serviceName;
 

@@ -1,5 +1,6 @@
 import { AbstractRequestClient } from '../abstract-request-client';
 import { resolver } from '../resolvers/container-dns-resolver';
+import { ClientOptions } from '../models/options';
 
 /**
  *
@@ -16,7 +17,7 @@ export class ContainerDNSRequestClient extends AbstractRequestClient {
    * @param servicePath
    * @param options
    */
-  constructor(containerName, containerPort, servicePath, options = {}) {
+  constructor(containerName, containerPort, servicePath, options = {} as ClientOptions) {
     super(options);
 
     this.containerName = containerName;

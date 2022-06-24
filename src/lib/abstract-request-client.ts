@@ -4,6 +4,7 @@ import check = require('check-types');
 import { v4 as uuidv4 } from 'uuid';
 
 import { LoggerFactory } from './utils/logger.factory';
+import { ClientOptions, BasicRequestOptions, RequestOptions, RetryOptions } from './models/Options';
 
 const REQUEST_PROTOCOL = 'http';
 const REQUEST_TIMEOUT_MS = 5000;
@@ -18,15 +19,15 @@ export class AbstractRequestClient {
   readonly verbose: boolean;
   readonly correlationHeaderName: string;
 
-  readonly request; // TODO typing
-  readonly retry; // TODO typing
+  readonly request: BasicRequestOptions; // TODO typing
+  readonly retry: RetryOptions; // TODO typing
 
   readonly logger;
 
   /**
    * @param options
    */
-  constructor(options: any = {}) {
+  constructor(options = {} as ClientOptions) {
     if (new.target === AbstractRequestClient) {
       throw new TypeError('Cannot construct AbstractRequestClient instances directly, please extend');
     }
@@ -39,14 +40,15 @@ export class AbstractRequestClient {
 
     // HTTP request
     this.request = {};
-    this.request.protocol = options.protocol || REQUEST_PROTOCOL;
-    this.request.timeout = options.timeoutMs || REQUEST_TIMEOUT_MS;
+    this.request.protocol = options.protocol ?? REQUEST_PROTOCOL;
+    this.request.timeout = options.timeoutMs ?? REQUEST_TIMEOUT_MS;
 
     // Retry
-    this.retry = {};
-    this.retry.retries = options.retries || options.retries >= 0 ? options.retries : RETRY_DEFAULTS.retries;
-    this.retry.minTimeout = options.minTimeoutMs || RETRY_DEFAULTS.minTimeout;
-    this.retry.maxTimeout = options.maxTimeoutMs || RETRY_DEFAULTS.maxTimeout;
+    this.retry = {
+      retries: options.retries ?? RETRY_DEFAULTS.retries,
+      minTimeout: options.minTimeoutMs ?? RETRY_DEFAULTS.minTimeout,
+      maxTimeout: options.maxTimeoutMs ?? RETRY_DEFAULTS.maxTimeout
+    };
   }
 
   /**
@@ -56,7 +58,7 @@ export class AbstractRequestClient {
    * @param options
    * @returns {Promise}
    */
-  async get(uri: string, options: any = {}): Promise<unknown> {
+  async get(uri: string, options: RequestOptions): Promise<unknown> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -70,7 +72,7 @@ export class AbstractRequestClient {
    * @param options
    * @returns {Promise}
    */
-  async options(uri: string, options: any = {}): Promise<unknown> {
+  async options(uri: string, options = {} as RequestOptions): Promise<unknown> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -85,7 +87,7 @@ export class AbstractRequestClient {
    * @param body
    * @returns {Promise}
    */
-  async post(uri: string, options: any = {}, body: unknown): Promise<unknown> {
+  async post(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -100,7 +102,7 @@ export class AbstractRequestClient {
    * @param body
    * @returns {Promise}
    */
-  async put(uri: string, options: any = {}, body: unknown): Promise<unknown> {
+  async put(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -115,7 +117,7 @@ export class AbstractRequestClient {
    * @param body
    * @returns {Promise}
    */
-  async delete(uri: string, options: any = {}, body: unknown): Promise<unknown> {
+  async delete(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -130,7 +132,7 @@ export class AbstractRequestClient {
    * @param body
    * @returns {Promise}
    */
-  async head(uri: string, options: any = {}, body: unknown): Promise<unknown> {
+  async head(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -145,7 +147,7 @@ export class AbstractRequestClient {
    * @param body
    * @returns {Promise}
    */
-  async patch(uri: string, options: any = {}, body: unknown): Promise<unknown> {
+  async patch(uri: string, options= {} as RequestOptions, body: unknown): Promise<unknown> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -160,7 +162,7 @@ export class AbstractRequestClient {
    * @param body
    * @returns {Promise}
    */
-  async method(method: string, uri: string, options: any = {}, body: unknown): Promise<unknown> {
+  async method(method: string, uri: string, options= {} as RequestOptions, body: unknown): Promise<unknown> {
     check.assert.string(method, 'method [string] must be provided');
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
@@ -192,7 +194,7 @@ export class AbstractRequestClient {
    * @param body
    * @private
    */
-  async _executeRequest(method, uri, options: any = {}, body): Promise<unknown> {
+  async _executeRequest(method, uri, options= {} as RequestOptions, body): Promise<unknown> {
     // Create clone of options, so we do not change its state.
     options = Object.assign({}, options);
 
@@ -224,7 +226,7 @@ export class AbstractRequestClient {
     const instance = axios.create();
 
     axiosRetry(instance, {
-      retries: options.retries || RETRY_DEFAULTS.retries, // number of retries
+      retries: this.retry.retries ?? RETRY_DEFAULTS.retries, // number of retries
       retryDelay: (retryCount) => {
         this.logger.warn(
           { method: method, url: url, headers: headers, query: query, attempt: retryCount },
