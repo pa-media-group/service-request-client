@@ -1,10 +1,8 @@
-import { AbstractRequestClient } from '../abstract-request-client';
-import { resolver } from '../resolvers/zookeeper-resolver';
 import { ClientOptions } from '../models/options';
+import { resolver } from '../resolvers/zookeeper-resolver';
 
-/**
- *
- */
+import { AbstractRequestClient } from './abstract-request-client';
+
 export class ZookeeperRequestClient extends AbstractRequestClient {
   readonly serviceName: string;
 
@@ -12,7 +10,7 @@ export class ZookeeperRequestClient extends AbstractRequestClient {
    * @param serviceName
    * @param options
    */
-  constructor(serviceName, options = {} as ClientOptions) {
+  constructor(serviceName: string, options = {} as ClientOptions) {
     super(options);
     this.serviceName = serviceName;
   }

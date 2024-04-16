@@ -6,5 +6,8 @@
     "src/**/*.json",
     "test/**/*",
     "test/**/*.json",
+  ],
+  "exclude": [
+    "tsconfig.build.json"
   ]
 }

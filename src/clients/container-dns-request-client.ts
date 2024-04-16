@@ -1,10 +1,8 @@
-import { AbstractRequestClient } from '../abstract-request-client';
-import { resolver } from '../resolvers/container-dns-resolver';
 import { ClientOptions } from '../models/options';
+import { resolver } from '../resolvers/container-dns-resolver';
 
-/**
- *
- */
+import { AbstractRequestClient } from './abstract-request-client';
+
 export class ContainerDNSRequestClient extends AbstractRequestClient {
   readonly containerName: string;
   readonly containerPort: number;
@@ -17,7 +15,7 @@ export class ContainerDNSRequestClient extends AbstractRequestClient {
    * @param servicePath
    * @param options
    */
-  constructor(containerName, containerPort, servicePath, options = {} as ClientOptions) {
+  constructor(containerName: string, containerPort: number, servicePath: string, options = {} as ClientOptions) {
     super(options);
 
     this.containerName = containerName;

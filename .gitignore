@@ -120,3 +120,6 @@ localstack-ready
 test/integration/localstack-storage/dynamodb
 test/integration/localstack-storage/recorded_api_calls.json
 test/integration/localstack-storage/kinesis
+
+### Jest
+/.run/jest.config.json.run.xml

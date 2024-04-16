@@ -1,4 +1,4 @@
-import { resolver } from '../../src/lib/resolvers/container-dns-resolver';
+import { resolver } from '../../src/resolvers/container-dns-resolver';
 
 describe('container-dns-resolver', () => {
   describe('#resolve()', () => {

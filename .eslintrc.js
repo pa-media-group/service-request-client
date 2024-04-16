@@ -17,6 +17,7 @@ module.exports = {
     'no-console': 'warn',
     'no-return-await': 'warn',
     'no-throw-literal': 'error',
+    // 'no-unused-vars': 'error', // Re-enable once all code is written
     'no-use-before-define': 'warn',
     'no-useless-return': 'error',
     'no-var': 'error',
@@ -25,14 +26,24 @@ module.exports = {
     'prefer-spread': 'warn',
     'prefer-promise-reject-errors': 'error',
     'require-await': 'off',
-    'no-explicit-any': 'off',
-    '@typescript-eslint/require-await': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/require-await': 'error',
     '@typescript-eslint/no-var-requires': 'off',
     'import/order': [
       'error',
       {
         groups: ['builtin', 'external', 'parent', 'sibling', 'index'],
+        pathGroups: [
+          {
+            pattern: '@pa-media-group/**',
+            group: 'external',
+            position: 'after',
+          },
+          {
+            pattern: '@press-association/**',
+            group: 'external',
+            position: 'after',
+          },
+        ],
         pathGroupsExcludedImportTypes: ['builtin'],
         alphabetize: {
           order: 'asc',

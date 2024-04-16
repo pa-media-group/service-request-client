@@ -1,10 +1,8 @@
-import { AbstractRequestClient } from '../abstract-request-client';
-import { resolver } from '../resolvers/host-port-resolver';
 import { ClientOptions } from '../models/options';
+import { resolver } from '../resolvers/host-port-resolver';
 
-/**
- *
- */
+import { AbstractRequestClient } from './abstract-request-client';
+
 export class HostPortRequestClient extends AbstractRequestClient {
   readonly host: string;
   readonly port: number;
@@ -17,7 +15,7 @@ export class HostPortRequestClient extends AbstractRequestClient {
    * @param servicePath
    * @param options
    */
-  constructor(host, port, servicePath, options = {} as ClientOptions) {
+  constructor(host: string, port: number, servicePath: string, options = {} as ClientOptions) {
     super(options);
 
     this.host = host;

@@ -1,10 +1,8 @@
-import { AbstractRequestClient } from '../abstract-request-client';
-import { resolver } from '../resolvers/consul-resolver';
 import { ClientOptions } from '../models/options';
+import { resolver } from '../resolvers/consul-resolver';
 
-/**
- *
- */
+import { AbstractRequestClient } from './abstract-request-client';
+
 export class ConsulRequestClient extends AbstractRequestClient {
   readonly serviceName: string;
 

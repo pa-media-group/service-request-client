@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'AWS_Jenkins-slave' }
+  agent { label 'AWS_Jenkins-Node18' }
 
   libraries {
     lib 'jenkins-ci-tad'
@@ -22,7 +22,7 @@ pipeline {
   }
 
   tools {
-    nodejs 'Node16.15.0'
+    nodejs 'Node20.10.0'
   }
 
   stages {

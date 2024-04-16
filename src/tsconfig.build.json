@@ -5,22 +5,21 @@
     "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "removeComments": true,
+    "rootDir": "./",
+    "outDir": "../dist",
     "sourceMap": true,
     "types": [
       "node",
       "jest"
     ],
     "strict": false,
-    "allowJs": true,
     "esModuleInterop": true
   },
   "include": [
-    "src/**/*",
-    "src/**/*.json",
-    "test/**/*",
-    "test/**/*.json"
+    "./**/*",
+    "./**/*.json"
   ],
   "exclude": [
-    "tsconfig.build.json",
+    "tsconfig.build.json"
   ]
 }

@@ -1,5 +1,5 @@
 /**
- * Consul Resolver. // TODO Implement ConsulResolver
+ * Consul Resolver.
  */
 class ConsulResolver {
   /**
@@ -9,7 +9,7 @@ class ConsulResolver {
    * @returns {Promise.<*>}
    */
   // eslint-disable-next-line @typescript-eslint/require-await,@typescript-eslint/no-unused-vars
-  async resolve(serviceName): Promise<string> {
+  async resolve(serviceName: string): Promise<string> {
     throw new Error('Consul resolver not implemented');
   }
 }

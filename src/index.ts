@@ -1,3 +1,13 @@
-import { ContainerDNSRequestClient, HostPortRequestClient } from './lib/clients';
+import { ContainerDNSRequestClient, HostPortRequestClient } from './clients';
+import { ClientOptions, RequestOptions, RetryOptions } from './models/options';
+import { Logger, LoggerFactory } from './utils/logger.factory';
 
-export { ContainerDNSRequestClient, HostPortRequestClient };
+export {
+  ClientOptions,
+  ContainerDNSRequestClient,
+  HostPortRequestClient,
+  Logger,
+  LoggerFactory,
+  RequestOptions,
+  RetryOptions,
+};
