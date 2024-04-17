@@ -1,0 +1,25 @@
+{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "removeComments": true,
+    "rootDir": "./",
+    "outDir": "../dist",
+    "sourceMap": true,
+    "types": [
+      "node",
+      "jest"
+    ],
+    "strict": false,
+    "esModuleInterop": true
+  },
+  "include": [
+    "./**/*",
+    "./**/*.json"
+  ],
+  "exclude": [
+    "tsconfig.build.json"
+  ]
+}

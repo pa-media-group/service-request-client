@@ -1,0 +1,26 @@
+{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "types": [
+      "node",
+      "jest"
+    ],
+    "strict": false,
+    "allowJs": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "src/**/*",
+    "src/**/*.json",
+    "test/**/*",
+    "test/**/*.json"
+  ],
+  "exclude": [
+    "tsconfig.build.json",
+  ]
+}

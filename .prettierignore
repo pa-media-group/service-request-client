@@ -1,0 +1,7 @@
+.build/
+.serverless/
+.vscode/
+.webpack/
+coverage/
+node_modules/
+CHANGELOG.md

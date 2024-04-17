@@ -1,13 +1,7 @@
-'use strict';
-
 /**
  * Docker Container DNS Resolver.
  */
 class ContainerDNSResolver {
-  constructor () {
-
-  }
-
   /**
    * Container DNS (e.g. Docker Service Name) resolver.
    *
@@ -15,13 +9,13 @@ class ContainerDNSResolver {
    * @param port
    * @returns {Promise.<*>}
    */
-  async resolve(serviceName, port = 80) {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async resolve(serviceName: string, port = 80): Promise<string> {
     if (!serviceName || serviceName.length === 0) {
-      return Promise.reject(new Error('service name must be provided'));
+      throw new Error('service name must be provided');
     }
-
-    return Promise.resolve(`${serviceName}:${port}`);
+    return `${serviceName}:${port}`;
   }
 }
 
-module.exports = new ContainerDNSResolver();
+export const resolver = new ContainerDNSResolver();
