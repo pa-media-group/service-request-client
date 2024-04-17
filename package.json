@@ -1,6 +1,6 @@
 {
   "name": "@pa-media-group/service-request-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An extension to request to facilitate making requests against discoverable HTTP services",
   "publishConfig": {
     "registry": "https://nexus.pressassociation.io/repository/npm-private/"

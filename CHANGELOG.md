@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/pa-media-group/service-request-client/compare/v1.0.0...v1.0.1) (2024-04-17)
+
+
+### Bug Fixes
+
+* **client:** cleanup javascript ([0a6c7b2](https://github.com/pa-media-group/service-request-client/commit/0a6c7b26116b019fad4bf547dceea825e37d3ba9))
+* **typings:** declare typings ([d89036d](https://github.com/pa-media-group/service-request-client/commit/d89036dbfa80faa526e504dc4a61336b9c1495e8))
+
 # [1.0.0](https://github.com/pa-media-group/service-request-client/compare/v0.0.7...v1.0.0) (2024-04-17)
 
 
