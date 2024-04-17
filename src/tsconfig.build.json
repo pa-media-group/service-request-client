@@ -13,7 +13,8 @@
       "jest"
     ],
     "strict": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "declaration": true,
   },
   "include": [
     "./**/*",
