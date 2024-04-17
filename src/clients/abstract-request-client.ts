@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import axiosRetry from 'axios-retry';
 import check from 'check-types';
 import { v4 as uuidV4 } from 'uuid';
@@ -25,7 +25,9 @@ export abstract class AbstractRequestClient {
   readonly logger: Logger;
 
   /**
-   * @param options
+   * Constructor.
+   *
+   * @param options client options that define the request client behaviour
    */
   protected constructor(options = {} as ClientOptions) {
     if (new.target === AbstractRequestClient) {
@@ -56,8 +58,9 @@ export abstract class AbstractRequestClient {
   /**
    * Perform a GET request.
    *
-   * @param uri
-   * @param options
+   * @param uri the request URI
+   * @param options request options
+   *
    * @returns {Promise}
    */
   async get(uri: string, options: RequestOptions): Promise<unknown> {
@@ -70,8 +73,9 @@ export abstract class AbstractRequestClient {
   /**
    * Perform an OPTIONS request.
    *
-   * @param uri
-   * @param options
+   * @param uri the request URI
+   * @param options request options
+   *
    * @returns {Promise}
    */
   async options(uri: string, options = {} as RequestOptions): Promise<unknown> {
@@ -84,9 +88,9 @@ export abstract class AbstractRequestClient {
   /**
    * Perform a POST request.
    *
-   * @param uri
-   * @param options
-   * @param body
+   * @param uri the request URI
+   * @param options request options
+   * @param body the request body
    * @returns {Promise}
    */
   async post(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
@@ -99,9 +103,10 @@ export abstract class AbstractRequestClient {
   /**
    * Perform a PUT request.
    *
-   * @param uri
-   * @param options
-   * @param body
+   * @param uri the request URI
+   * @param options request options
+   * @param body the request body
+   *
    * @returns {Promise}
    */
   async put(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
@@ -114,9 +119,10 @@ export abstract class AbstractRequestClient {
   /**
    * Perform a DELETE request.
    *
-   * @param uri
-   * @param options
-   * @param body
+   * @param uri the request URI
+   * @param options request options
+   * @param body the request body
+   *
    * @returns {Promise}
    */
   async delete(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
@@ -129,9 +135,10 @@ export abstract class AbstractRequestClient {
   /**
    * Perform a HEAD request.
    *
-   * @param uri
-   * @param options
-   * @param body
+   * @param uri the request URI
+   * @param options request options
+   * @param body the request body
+   *
    * @returns {Promise}
    */
   async head(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
@@ -144,9 +151,10 @@ export abstract class AbstractRequestClient {
   /**
    * Perform a PATCH request.
    *
-   * @param uri
-   * @param options
-   * @param body
+   * @param uri the request URI
+   * @param options request options
+   * @param body the request body
+   *
    * @returns {Promise}
    */
   async patch(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
@@ -158,10 +166,11 @@ export abstract class AbstractRequestClient {
 
   /**
    *
-   * @param method
-   * @param uri
-   * @param options
-   * @param body
+   * @param method the request method, e.g. GET, POST, PUT, DELETE
+   * @param uri the request URI
+   * @param options request options
+   * @param body the request body
+   *
    * @returns {Promise}
    */
   async method(method: string, uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
@@ -182,16 +191,16 @@ export abstract class AbstractRequestClient {
   /**
    * Implementations must provide a way to resolve the service base URL.
    *
-   * @returns {string}
+   * @returns {string} the base URL
    * @private
    */
   abstract resolveServiceBaseURL(): Promise<string>;
 
   /**
-   * @param method
-   * @param uri
-   * @param options
-   * @param body
+   * @param method the request method, e.g. GET, POST, PUT, DELETE
+   * @param uri the request URI
+   * @param options request options
+   * @param body the request body
    * @private
    */
   async _executeRequest(method: string, uri: string, options = {} as RequestOptions, body?: unknown): Promise<unknown> {
@@ -218,7 +227,7 @@ export abstract class AbstractRequestClient {
       this.logger.info({ method, url, headers, query }, 'performing request');
     }
 
-    const instance = axios.create();
+    const instance: AxiosInstance = axios.create();
     const { retries, minTimeoutMs, maxTimeoutMs } = this.retry;
 
     axiosRetry(instance, {
@@ -238,15 +247,17 @@ export abstract class AbstractRequestClient {
       },
     });
 
+    const axiosRequestConfig: AxiosRequestConfig<unknown> = {
+      method,
+      url,
+      headers,
+      data: body ?? {},
+      params: query ?? {},
+      timeout: timeoutMs ?? this.request.timeoutMs,
+    };
+
     return instance
-      .request({
-        method,
-        url,
-        headers,
-        data: body ?? {},
-        params: query ?? {},
-        timeout: timeoutMs ?? this.request.timeoutMs,
-      })
+      .request(axiosRequestConfig)
       .then((res) => {
         if (this.verbose) {
           this.logger.info(
