@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import axiosRetry from 'axios-retry';
 import check from 'check-types';
 import { v4 as uuidV4 } from 'uuid';
@@ -63,7 +63,7 @@ export abstract class AbstractRequestClient {
    *
    * @returns {Promise}
    */
-  async get(uri: string, options: RequestOptions): Promise<unknown> {
+  async get(uri: string, options: RequestOptions): Promise<AxiosResponse> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -78,7 +78,7 @@ export abstract class AbstractRequestClient {
    *
    * @returns {Promise}
    */
-  async options(uri: string, options = {} as RequestOptions): Promise<unknown> {
+  async options(uri: string, options = {} as RequestOptions): Promise<AxiosResponse> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -93,7 +93,7 @@ export abstract class AbstractRequestClient {
    * @param body the request body
    * @returns {Promise}
    */
-  async post(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
+  async post(uri: string, options = {} as RequestOptions, body: unknown): Promise<AxiosResponse> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -109,7 +109,7 @@ export abstract class AbstractRequestClient {
    *
    * @returns {Promise}
    */
-  async put(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
+  async put(uri: string, options = {} as RequestOptions, body: unknown): Promise<AxiosResponse> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -125,7 +125,7 @@ export abstract class AbstractRequestClient {
    *
    * @returns {Promise}
    */
-  async delete(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
+  async delete(uri: string, options = {} as RequestOptions, body: unknown): Promise<AxiosResponse> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -141,7 +141,7 @@ export abstract class AbstractRequestClient {
    *
    * @returns {Promise}
    */
-  async head(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
+  async head(uri: string, options = {} as RequestOptions, body: unknown): Promise<AxiosResponse> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -157,7 +157,7 @@ export abstract class AbstractRequestClient {
    *
    * @returns {Promise}
    */
-  async patch(uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
+  async patch(uri: string, options = {} as RequestOptions, body: unknown): Promise<AxiosResponse> {
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
 
@@ -173,7 +173,7 @@ export abstract class AbstractRequestClient {
    *
    * @returns {Promise}
    */
-  async method(method: string, uri: string, options = {} as RequestOptions, body: unknown): Promise<unknown> {
+  async method(method: string, uri: string, options = {} as RequestOptions, body: unknown): Promise<AxiosResponse> {
     check.assert.string(method, 'method [string] must be provided');
     check.assert.string(uri, 'uri [string] must be provided');
     check.assert.maybe.object(options, 'options [object] must be provided');
@@ -203,7 +203,12 @@ export abstract class AbstractRequestClient {
    * @param body the request body
    * @private
    */
-  async _executeRequest(method: string, uri: string, options = {} as RequestOptions, body?: unknown): Promise<unknown> {
+  async _executeRequest(
+    method: string,
+    uri: string,
+    options = {} as RequestOptions,
+    body?: unknown,
+  ): Promise<AxiosResponse> {
     // Extract options...
     const { correlationId, query, headers = {}, timeoutMs } = options;
 
@@ -265,7 +270,7 @@ export abstract class AbstractRequestClient {
             'request completed successfully',
           );
         }
-        return res.data;
+        return res;
       })
       .catch((err) => {
         this.logger.error(

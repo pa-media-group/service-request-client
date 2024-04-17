@@ -13,7 +13,7 @@ export interface Headers {
 }
 
 export interface Parameters {
-  [key: string]: string;
+  [key: string]: string | number | boolean;
 }
 
 export interface BasicRequestOptions {

@@ -39,7 +39,7 @@ describe('container-dns-request-client', () => {
       const response = await client.get('resource-name/123', {
         correlationId: '5d14c8ea-54f4-4e1a-8e5e-6eff865dc768',
       });
-      expect(response).toEqual(GET_FIXTURE);
+      expect(response.data).toEqual(GET_FIXTURE);
       expect(axios.request).toHaveBeenCalledTimes(1);
       expect(axios.request).toHaveBeenCalledWith({
         data: {},
@@ -125,7 +125,7 @@ describe('container-dns-request-client', () => {
         undefined,
       );
 
-      expect(response).toEqual(HEAD_FIXTURE);
+      expect(response.data).toEqual(HEAD_FIXTURE);
       expect(axios.request).toHaveBeenCalledTimes(1);
       expect(axios.request).toHaveBeenCalledWith({
         data: {},
@@ -146,7 +146,7 @@ describe('container-dns-request-client', () => {
         correlationId: '8dfc950a-4b48-4cb3-ac36-b9f23f80bfad',
       });
 
-      expect(response).toEqual(OPTIONS_FIXTURE);
+      expect(response.data).toEqual(OPTIONS_FIXTURE);
       expect(axios.request).toHaveBeenCalledTimes(1);
       expect(axios.request).toHaveBeenCalledWith({
         data: {},
@@ -164,7 +164,7 @@ describe('container-dns-request-client', () => {
       jest.spyOn(axios, 'request').mockResolvedValue({ data: PUT_FIXTURE } as AxiosResponse);
 
       const response = await client.put('resource-name/123', defaultOptions, { message: 'hello' });
-      expect(response).toEqual(PUT_FIXTURE);
+      expect(response.data).toEqual(PUT_FIXTURE);
       expect(axios.request).toHaveBeenCalledTimes(1);
       expect(axios.request).toHaveBeenCalledWith({
         data: { message: 'hello' },
@@ -185,7 +185,7 @@ describe('container-dns-request-client', () => {
       jest.spyOn(axios, 'request').mockResolvedValue({ data: POST_FIXTURE } as AxiosResponse);
 
       const response = await client.post('resource-name/123', defaultOptions, { message: 'hello' });
-      expect(response).toEqual(POST_FIXTURE);
+      expect(response.data).toEqual(POST_FIXTURE);
       expect(axios.request).toHaveBeenCalledTimes(1);
       expect(axios.request).toHaveBeenCalledWith({
         data: { message: 'hello' },
@@ -206,7 +206,7 @@ describe('container-dns-request-client', () => {
       jest.spyOn(axios, 'request').mockResolvedValue({ data: DELETE_FIXTURE } as AxiosResponse);
 
       const response = await client.delete('resource-name/123', defaultOptions, { message: 'hello' });
-      expect(response).toEqual(DELETE_FIXTURE);
+      expect(response.data).toEqual(DELETE_FIXTURE);
       expect(axios.request).toHaveBeenCalledTimes(1);
       expect(axios.request).toHaveBeenCalledWith({
         data: { message: 'hello' },
@@ -227,7 +227,7 @@ describe('container-dns-request-client', () => {
       jest.spyOn(axios, 'request').mockResolvedValue({ data: PATCH_FIXTURE } as AxiosResponse);
 
       const response = await client.patch('resource-name/123', defaultOptions, { message: 'hello' });
-      expect(response).toEqual(PATCH_FIXTURE);
+      expect(response.data).toEqual(PATCH_FIXTURE);
       expect(axios.request).toHaveBeenCalledTimes(1);
       expect(axios.request).toHaveBeenCalledWith({
         data: { message: 'hello' },
@@ -255,7 +255,7 @@ describe('container-dns-request-client', () => {
         },
         undefined,
       );
-      expect(response).toEqual(GET_FIXTURE);
+      expect(response.data).toEqual(GET_FIXTURE);
       expect(axios.request).toHaveBeenCalledTimes(1);
       expect(axios.request).toHaveBeenCalledWith({
         data: {},
@@ -271,7 +271,7 @@ describe('container-dns-request-client', () => {
       jest.spyOn(axios, 'request').mockResolvedValue({ data: POST_FIXTURE } as AxiosResponse);
 
       const response = await client.method('POST', 'resource-name/123', defaultOptions, { message: 'hello' });
-      expect(response).toEqual(POST_FIXTURE);
+      expect(response.data).toEqual(POST_FIXTURE);
       expect(axios.request).toHaveBeenCalledTimes(1);
       expect(axios.request).toHaveBeenCalledWith({
         data: { message: 'hello' },
