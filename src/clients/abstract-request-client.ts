@@ -202,7 +202,7 @@ export abstract class AbstractRequestClient {
 
     headers[this.correlationHeaderName] = correlationId ?? uuidV4();
 
-    if (!uri || uri.length === 0) {
+    if (!uri) {
       uri = '';
     }
 
