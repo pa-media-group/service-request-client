@@ -30,7 +30,7 @@ export class HostPortRequestClient extends AbstractRequestClient {
     const hostPort = await resolver.resolve(this.host, this.port);
     const serviceUrl = `${this.request.protocol}://${hostPort}/${this.servicePath}`;
 
-    this.logger.info(`Resolving Service Base URL for container => ${serviceUrl}`);
+    this.logger.trace(`Resolving Service Base URL for container => ${serviceUrl}`);
     return serviceUrl;
   }
 }

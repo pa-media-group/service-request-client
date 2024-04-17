@@ -22,7 +22,7 @@ export class ZookeeperRequestClient extends AbstractRequestClient {
     const hostPort = await resolver.resolve(this.serviceName);
     const serviceUrl = `${this.request.protocol}://${hostPort}/${this.serviceName}`;
 
-    this.logger.info(`Resolving Service Base URL for container => ${serviceUrl}`);
+    this.logger.trace(`Resolving Service Base URL for container => ${serviceUrl}`);
     return serviceUrl;
   }
 }
