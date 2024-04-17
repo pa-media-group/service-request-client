@@ -180,14 +180,12 @@ export abstract class AbstractRequestClient {
   }
 
   /**
+   * Implementations must provide a way to resolve the service base URL.
    *
    * @returns {string}
    * @private
    */
-  // eslint-disable-next-line @typescript-eslint/require-await
-  async resolveServiceBaseURL(): Promise<string> {
-    throw new Error('Should be overridden by subclass');
-  }
+  abstract resolveServiceBaseURL(): Promise<string>;
 
   /**
    * @param method
