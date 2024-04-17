@@ -1,18 +1,21 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
-import check = require('check-types');
-import { v4 as uuidv4 } from 'uuid';
+import check from 'check-types';
+import { v4 as uuidV4 } from 'uuid';
 
-import { BasicRequestOptions, ClientOptions, RequestOptions, RetryOptions } from '../models/options';
+import {
+  BasicRequestOptions,
+  ClientOptions,
+  RequestOptions,
+  RetryOptions,
+  defaultClientOptions,
+  removeNullOptions,
+} from '../models/options';
 import { Logger, LoggerFactory } from '../utils/logger.factory';
 
-const REQUEST_PROTOCOL = 'http';
-const REQUEST_TIMEOUT_MS = 5000;
-const RETRY_DEFAULTS = { retries: 2, minTimeout: 75, maxTimeout: 750 };
 const METHODS_ALLOWED = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'];
-const DEFAULT_CORRELATION_HEADER_NAME = 'X-CorrelationID';
 
-export class AbstractRequestClient {
+export abstract class AbstractRequestClient {
   readonly verbose: boolean;
   readonly correlationHeaderName: string;
 
@@ -24,27 +27,29 @@ export class AbstractRequestClient {
   /**
    * @param options
    */
-  constructor(options = {} as ClientOptions) {
+  protected constructor(options = {} as ClientOptions) {
     if (new.target === AbstractRequestClient) {
       throw new TypeError('Cannot construct AbstractRequestClient instances directly, please extend');
     }
     this.logger = LoggerFactory.create(this.constructor.name);
 
-    this.verbose = options.verbose || false;
+    const mergedOptions = { ...defaultClientOptions, ...removeNullOptions(options) };
 
-    // Correlation
-    this.correlationHeaderName = options.correlationHeaderName || DEFAULT_CORRELATION_HEADER_NAME;
+    // Correlation and verbosity
+    this.correlationHeaderName = mergedOptions.correlationHeaderName;
+    this.verbose = mergedOptions.verbose;
 
-    // HTTP request
-    this.request = {};
-    this.request.protocol = options.protocol ?? REQUEST_PROTOCOL;
-    this.request.timeout = options.timeoutMs ?? REQUEST_TIMEOUT_MS;
+    // HTTP request option defaults. Timeout can be  overridden by individual requests.
+    this.request = {
+      protocol: mergedOptions.protocol,
+      timeoutMs: mergedOptions.timeoutMs,
+    };
 
     // Retry
     this.retry = {
-      retries: options.retries ?? RETRY_DEFAULTS.retries,
-      minTimeout: options.minTimeoutMs ?? RETRY_DEFAULTS.minTimeout,
-      maxTimeout: options.maxTimeoutMs ?? RETRY_DEFAULTS.maxTimeout,
+      retries: mergedOptions.retries,
+      minTimeoutMs: mergedOptions.minTimeoutMs,
+      maxTimeoutMs: mergedOptions.maxTimeoutMs,
     };
   }
 
@@ -181,7 +186,7 @@ export class AbstractRequestClient {
    */
   // eslint-disable-next-line @typescript-eslint/require-await
   async resolveServiceBaseURL(): Promise<string> {
-    return `${this.request.protocol}://localhost`;
+    throw new Error('Should be overridden by subclass');
   }
 
   /**
@@ -191,23 +196,18 @@ export class AbstractRequestClient {
    * @param body
    * @private
    */
-  async _executeRequest(method, uri, options = {} as RequestOptions, body): Promise<unknown> {
-    // Create clone of options, so we do not change its state.
-    options = Object.assign({}, options);
+  async _executeRequest(method: string, uri: string, options = {} as RequestOptions, body?: unknown): Promise<unknown> {
+    // Extract options...
+    const { correlationId, query, headers = {}, timeoutMs } = options;
 
-    const { query, headers = {} } = options;
-
-    if (!options.correlationId) {
-      options.correlationId = uuidv4();
-    }
-    headers[this.correlationHeaderName] = options.correlationId;
+    headers[this.correlationHeaderName] = correlationId ?? uuidV4();
 
     if (!uri || uri.length === 0) {
       uri = '';
     }
 
     // Inherit
-    let baseUrl;
+    let baseUrl: string;
 
     try {
       baseUrl = await this.resolveServiceBaseURL();
@@ -221,17 +221,18 @@ export class AbstractRequestClient {
     }
 
     const instance = axios.create();
+    const { retries, minTimeoutMs } = this.retry;
 
     axiosRetry(instance, {
-      retries: this.retry.retries ?? RETRY_DEFAULTS.retries, // number of retries
+      retries, // number of retries
       retryDelay: (retryCount) => {
         this.logger.warn(
           { method: method, url: url, headers: headers, query: query, attempt: retryCount },
           'retry request',
         );
 
-        const delay = Math.max(this.retry.minTimeout, retryCount * 200);
-        return Math.min(this.retry.minTimeout, delay); // time interval between retries
+        const delay = Math.max(minTimeoutMs, retryCount * 200);
+        return Math.min(minTimeoutMs, delay); // time interval between retries
       },
       retryCondition: (error) => {
         this.logger.error(error, 'error request');
@@ -244,9 +245,9 @@ export class AbstractRequestClient {
         method,
         url,
         headers,
-        data: body || {},
-        params: query || {},
-        timeout: this.request.timeout,
+        data: body ?? {},
+        params: query ?? {},
+        timeout: timeoutMs ?? this.request.timeoutMs,
       })
       .then((res) => {
         if (this.verbose) {

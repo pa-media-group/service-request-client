@@ -18,7 +18,7 @@ export interface Parameters {
 
 export interface BasicRequestOptions {
   protocol?: string;
-  timeout?: number;
+  timeoutMs?: number;
 }
 
 export interface RequestOptions extends BasicRequestOptions {
@@ -29,6 +29,31 @@ export interface RequestOptions extends BasicRequestOptions {
 
 export interface RetryOptions {
   retries: number;
-  minTimeout: number;
-  maxTimeout: number;
+  minTimeoutMs: number;
+  maxTimeoutMs: number;
 }
+
+export const defaultClientOptions: ClientOptions = {
+  correlationHeaderName: 'X-CorrelationID',
+  minTimeoutMs: 75,
+  maxTimeoutMs: 750,
+  protocol: 'http',
+  retries: 2,
+  timeoutMs: 5000,
+  verbose: false,
+};
+
+export const removeNullOptions = (options: ClientOptions): ClientOptions => {
+  if (options == undefined) {
+    return undefined;
+  }
+
+  Object.keys(options).forEach((key) => {
+    const value = options[key];
+
+    if (value === null || value === undefined) {
+      delete options[key];
+    }
+  });
+  return options;
+};
