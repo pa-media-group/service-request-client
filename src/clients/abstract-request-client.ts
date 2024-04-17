@@ -221,7 +221,7 @@ export abstract class AbstractRequestClient {
     }
 
     const instance = axios.create();
-    const { retries, minTimeoutMs } = this.retry;
+    const { retries, minTimeoutMs, maxTimeoutMs } = this.retry;
 
     axiosRetry(instance, {
       retries, // number of retries
@@ -232,7 +232,7 @@ export abstract class AbstractRequestClient {
         );
 
         const delay = Math.max(minTimeoutMs, retryCount * 200);
-        return Math.min(minTimeoutMs, delay); // time interval between retries
+        return Math.min(maxTimeoutMs, delay); // time interval between retries
       },
       retryCondition: (error) => {
         this.logger.error(error, 'error request');
