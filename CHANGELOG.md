@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/pa-media-group/service-request-client/compare/v1.0.2...v1.0.3) (2024-04-18)
+
+
+### Bug Fixes
+
+* **retry:** status undefined check ([b33d378](https://github.com/pa-media-group/service-request-client/commit/b33d3789e8a3dabbbeffbb445d3c6762554418a8))
+
 ## [1.0.2](https://github.com/pa-media-group/service-request-client/compare/v1.0.1...v1.0.2) (2024-04-17)
 
 
