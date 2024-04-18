@@ -247,8 +247,9 @@ export abstract class AbstractRequestClient {
         return Math.min(maxTimeoutMs, delay); // time interval between retries
       },
       retryCondition: (error) => {
-        this.logger.error(error, 'error request');
-        return error.response.status === 429 || error.response.status > 499;
+        this.logger.error({ error }, 'error request');
+        const status = error.response?.status ?? error.status;
+        return status === undefined || status === 429 || status > 499;
       },
     });
 
